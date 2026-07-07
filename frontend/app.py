@@ -1,7 +1,13 @@
-import streamlit as st
-import requests
+import sys
+from pathlib import Path
 
-API_URL = "http://127.0.0.1:8000/analyze"
+import streamlit as st
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(ROOT_DIR / "backend"))
+
+from ai_engine import analyze_listing_with_ai
+
 
 st.set_page_config(
     page_title="PropertyIntelAI",
@@ -27,66 +33,35 @@ if st.button("Analyze Listing"):
         st.warning("Please enter a property listing.")
     else:
         with st.spinner("Analyzing listing..."):
-            try:
-                response = requests.post(
-                    API_URL,
-                    json={"listing_text": listing_text}
-                )
+            result = analyze_listing_with_ai(listing_text)
 
-                if response.status_code == 200:
-                    result = response.json()
+        st.success("Analysis completed.")
 
-                    st.success("Analysis completed.")
+        col1, col2, col3 = st.columns(3)
 
-                    col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Quality Score", result.get("quality_score", "N/A"))
 
-                    with col1:
-                        st.metric("Quality Score", result.get("quality_score", "N/A"))
+        with col2:
+            st.metric("SEO Score", result.get("seo_score", "N/A"))
 
-                    with col2:
-                        st.metric("SEO Score", result.get("seo_score", "N/A"))
+        with col3:
+            st.metric("Completeness Score", result.get("completeness_score", "N/A"))
 
-                    with col3:
-                        st.metric("Completeness Score", result.get("completeness_score", "N/A"))
+        st.subheader("Missing Fields")
+        for field in result.get("missing_fields", []):
+            st.write(f"- {field}")
 
-                    st.divider()
+        st.subheader("AI Explanation")
+        for item in result.get("explanation", []):
+            st.write(f"- {item}")
 
-                    st.subheader("Missing Fields")
-                    missing_fields = result.get("missing_fields", [])
-                    if missing_fields:
-                        for field in missing_fields:
-                            st.write(f"- {field}")
-                    else:
-                        st.success("No major missing fields detected.")
+        st.subheader("Recommended SEO Keywords")
+        st.write(", ".join(result.get("seo_keywords", [])))
 
-                    st.subheader("AI Explanation")
-                    explanations = result.get("explanation", [])
-                    if explanations:
-                        for item in explanations:
-                            st.write(f"- {item}")
-                    else:
-                        st.write("No explanation available.")
+        st.subheader("Improvement Suggestions")
+        for suggestion in result.get("improvement_suggestions", []):
+            st.write(f"- {suggestion}")
 
-                    st.subheader("Recommended SEO Keywords")
-                    keywords = result.get("seo_keywords", [])
-                    if keywords:
-                        st.write(", ".join(keywords))
-                    else:
-                        st.write("No SEO keywords returned.")
-
-                    st.subheader("Improvement Suggestions")
-                    suggestions = result.get("improvement_suggestions", [])
-                    if suggestions:
-                        for suggestion in suggestions:
-                            st.write(f"- {suggestion}")
-                    else:
-                        st.write("No suggestions returned.")
-
-                    st.subheader("Improved SEO-Friendly Listing")
-                    st.write(result.get("improved_listing", "No improved listing generated."))
-
-                else:
-                    st.error("API request failed. Make sure FastAPI is running.")
-
-            except requests.exceptions.ConnectionError:
-                st.error("Could not connect to FastAPI. Start the backend first.")
+        st.subheader("Improved SEO-Friendly Listing")
+        st.write(result.get("improved_listing", "No improved listing generated."))

@@ -1,6 +1,6 @@
 import re
 import pandas as pd
-from backend.config import PROCESSED_DATA_PATH
+from config import PROCESSED_DATA_PATH
 
 
 def load_knowledge_base():
