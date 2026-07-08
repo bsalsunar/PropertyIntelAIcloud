@@ -11,10 +11,11 @@ Live Demo
 https://propertyintelaicloud-2pvbzpgjrawb9phtyk4ewn.streamlit.app/
 
 ---
-
-<img width="1184" height="588" alt="Screenshot 2026-07-02 at 9 38 55 PM" src="https://github.com/user-attachments/assets/51af1402-20e1-42f3-8fa1-d0293ef53597" />
+Screenshots:
 
 <img width="598" height="418" alt="Screenshot 2026-07-02 at 9 40 07 PM" src="https://github.com/user-attachments/assets/4d330e19-aef3-4252-86d5-23a18163fc9c" />
+
+<img width="1184" height="588" alt="Screenshot 2026-07-02 at 9 38 55 PM" src="https://github.com/user-attachments/assets/51af1402-20e1-42f3-8fa1-d0293ef53597" />
 
 <img width="1430" height="797" alt="Screenshot 2026-07-03 at 2 16 34 PM" src="https://github.com/user-attachments/assets/56ce60f0-4d8b-4eff-bea1-c9a5c8f7ec72" />
 
